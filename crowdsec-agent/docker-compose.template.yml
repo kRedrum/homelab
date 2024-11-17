@@ -1,0 +1,36 @@
+# TODO: centralize logs for no dealy reactoion
+
+services:
+  crowdsec-agent:
+    image: crowdsecurity/crowdsec:latest
+    environment:
+      - TZ=Europe/Budapest
+      - DISABLE_LOCAL_API=true
+      - LOCAL_API_URL=http://crowdsec-lapi:8080
+      - AGENT_USERNAME=${CROWDSEC_AGENT_USERNAME}
+      - AGENT_PASSWORD=${CROWDSEC_AGENT_PASSWORD}
+      - "COLLECTIONS=crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules LePresidente/jellyfin crowdsecurity/traefik"
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 60s
+      labels:
+        - "prometheus-job=crowdsec-agent"
+        - "prometheus-port=6060"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/log:/var/log:ro
+      - agent_data:/var/lib/crowdsec/data
+      - ${NAS_PATH}/configs/crowdsec-agent/acquis.yaml:/etc/crowdsec/acquis.yaml
+    networks:
+      - network_private
+
+networks:
+  network_private:
+    external: true
+
+volumes:
+  agent_data:

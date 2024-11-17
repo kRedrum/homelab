@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  audiobookshelf:
+    image: advplyr/audiobookshelf:latest
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=network_private"
+        - "traefik.http.routers.audiobookshelf.rule=Host(`${AUDIOBOOKSHELF_DOMAIN}`)"
+        - "traefik.http.routers.audiobookshelf.entrypoints=websecure"
+        - "traefik.http.routers.audiobookshelf.middlewares=internal-only@file"
+        - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
+    ports:
+      - ${AUDIOBOOKSHELF_PORT}:80
+    volumes:
+      - ${NAS_PATH}/audiobooks:/medias/audiobooks
+      - ${NAS_PATH}/podcasts:/medias/podcasts
+      - ${NAS_PATH}/configs/audiobooks:/config
+    networks:
+      - network_private
+
+networks:
+  network_private:
+    external: true

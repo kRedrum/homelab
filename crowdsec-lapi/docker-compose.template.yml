@@ -1,0 +1,32 @@
+services:
+  crowdsec-lapi:
+    image: crowdsecurity/crowdsec:latest
+    environment:
+      - TZ=Europe/Budapest
+      - DISABLE_AGENT=true
+      - AGENT_USERNAME=${CROWDSEC_AGENT_USERNAME}
+      - AGENT_PASSWORD=${CROWDSEC_AGENT_PASSWORD}
+      - "COLLECTIONS=crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/traefik"
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 60s
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "prometheus-job=crowdsec-lapi"
+        - "prometheus-port=6060"
+    volumes:
+      - ${NAS_PATH}/configs/crowdsec:/etc/crowdsec
+      - ${NAS_PATH}/data/crowdsec:/var/lib/crowdsec/data
+    networks:
+      - network_private
+
+networks:
+  network_private:
+    external: true

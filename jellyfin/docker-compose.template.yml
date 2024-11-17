@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 2
+        window: 60s
+      placement:
+        constraints:
+          - node.role == worker
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.jellyfin.entrypoints=websecure"
+        - "traefik.swarm.network=network_public"
+        - "traefik.http.routers.jellyfin.rule=Host(`${JELLYFIN_DOMAIN}`)"
+        - "traefik.http.routers.jellyfin.middlewares=secure-middleware@file,rate-limit@file,internal-only@file"
+        - "traefik.http.services.jellyfin.loadbalancer.server.port=8920"
+        - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt"
+    ports:
+      - ${JELLYFIN_PORT}:8096
+      - ${JELLYFIN_SECURE_PORT}:8920
+    volumes:
+      - ${NAS_PATH}/configs/jellyfin:/config
+      - ${NAS_PATH}/series:/media/series
+      - ${NAS_PATH}/movies:/media/movies
+      - ${NAS_PATH}/anime:/media/anime
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - network_public
+
+networks:
+  network_public:
+    external: true

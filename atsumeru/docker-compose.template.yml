@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  atsumeru:
+    image: 'atsumerudev/atsumeru:latest'
+    container_name: atsumeru
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=network_private"
+        - "traefik.http.routers.atsumeru.rule=Host(`${AUDIOBOOKSHELF_DOMAIN}`)"
+        - "traefik.http.routers.atsumeru.entrypoints=websecure"
+        - "traefik.http.routers.atsumeru.middlewares=internal-only@file"
+        - "traefik.http.services.atsumeru.loadbalancer.server.port=80"
+    volumes:
+      - ${NAS_PATH}/configs/atsumeru:/app/config
+      - ${NAS_PATH}/configs/atsumeru/db:/app/database
+      - ${NAS_PATH}/cache/atsumeru:/app/cache
+      - ${NAS_PATH}/logs:/app/logs

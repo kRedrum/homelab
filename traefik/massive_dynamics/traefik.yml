@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://json.schemastore.org/traefik-v3.json
+
+# accessLog: 
+#   filePath: /mnt/external/logs/traefik-access.log
+#   format: json
+
+# log:
+#   filePath: /mnt/external/logs/traefik.log
+#   maxAge: 7
+#   format: json
+
+api:
+  dashboard: true
+  insecure: true
+
+metrics:
+  prometheus: {}
+
+providers:
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true
+  swarm:
+    exposedByDefault: false
+    endpoint: unix:///var/run/docker.sock
+    network: network_private
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: akitlosz2000@gmail.com
+      storage: /srv/letsencrypt/acme.json
+      # caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+
+experimental:
+  plugins:
+    bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.4.4

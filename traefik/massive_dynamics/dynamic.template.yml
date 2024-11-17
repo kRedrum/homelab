@@ -1,0 +1,41 @@
+http:
+  middlewares:
+    internal-only:
+      ipWhiteList:
+        sourceRange:
+          - "192.168.50.0/24"
+    secure-redirect:
+      redirectScheme:
+        scheme: https
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 10
+    secure-middleware:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: "noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+          X-XSS-PROTECTION: "1"
+        SSLRedirect: true
+        SSLHost: "kredam.dev"
+        SSLForceHost: true
+        STSSeconds: 315360000
+        STSIncludeSubdomains: true
+        STSPreload: true
+        forceSTSHeader: true
+        frameDeny: true
+        contentTypeNosniff: true
+    basic-auth:
+      basicAuth:
+        users:
+          - "kredam:$apr1$JRQIiALm$.gJlnCw27w20NMnxTWlZ61"
+    crowdsec:
+      plugin:
+        bouncer:
+          enabled: true
+          crowdsecAppsecEnabled: true
+          crowdsecAppsecHost: crowdsec-lapi:7422
+          CrowdsecLapiHost: crowdsec-lapi:8080
+          crowdsecAppsecFailureBlock: true
+          crowdsecAppsecUnreachableBlock: true
+          crowdsecLapiKey: ${TRAEFIK_BOUNCER_KEY}

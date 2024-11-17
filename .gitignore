@@ -1,0 +1,13 @@
+/env/.env
+
+# Webserver
+/.htaccess
+
+# Scriptfiles
+*.log
+
+# Ignore all .env files
+**/.env
+
+# Ignore all docker-compose.yaml files
+**/docker-compose.yml

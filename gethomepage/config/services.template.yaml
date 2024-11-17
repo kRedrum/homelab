@@ -1,0 +1,47 @@
+---
+- Media:
+    - Audiobookshelf:
+        icon: sh-audiobookshelf.svg
+        href: "${AUDIOBOOK_URL}"
+        description: "Audiobook server"
+    - Atsumeru:
+        icon: /icons/atsumeru.png
+        href: "${ATSUMERU_URL}"
+        description: "Manga & Anime library"
+    - Jellyfin:
+        icon: sh-jellyfin.svg
+        href: "${JELLYFIN_URL}"
+        description: "Media server"
+
+- Networking:
+    - Traefik:
+        icon: sh-traefik.svg
+        href: "${TRAEFIK_URL}"
+        description: "Reverse proxy"
+    - Grafana:
+        icon: sh-grafana.svg
+        href: "${GRAFANA_URL}"
+        description: "Monitoring & analytics"
+    - Uptime Kuma:
+        icon: sh-uptime-kuma.svg
+        href: "${UPTIME_KUMA_URL}"
+        description: "Uptime monitoring"
+
+- Utilities:
+    - Portainer:
+        icon: sh-portainer.svg
+        href: "${PORTAINER_URL}"
+        description: "Docker management"
+    - qBittorrent:
+        icon: sh-vuetorrent.svg
+        href: "${TORRENT_URL}"
+        description: "Torrent client"
+    - Code Server:
+        icon: sh-visual-studio-code.svg
+        href: "${CODE_URL}"
+        description: "VS Code server"
+    - Proxmox:
+        icon: sh-proxmox.svg
+        href: "${PROXMOX_URL}"
+        description: "Virtualization platform"
+    

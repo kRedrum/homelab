@@ -1,0 +1,22 @@
+appsec_config: crowdsecurity/appsec-default
+labels:
+    type: appsec
+listen_addr: 0.0.0.0:7422
+source: appsec
+---
+source: docker
+container_name_regexp:
+  - private_jellyfin*
+labels:
+  type: jellyfin
+---
+source: docker
+container_name_regexp:
+  - network_traefik.*
+labels:
+  type: traefik
+---
+filenames:
+  - /var/log/*.log
+labels:
+  type: syslog

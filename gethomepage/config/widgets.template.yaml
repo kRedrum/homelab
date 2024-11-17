@@ -1,0 +1,20 @@
+- search:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: true
+  hideVisitURL: true
+  provider: google # google, duckduckgo, bing, baidu, brave or custom
+  target: _blank # One of _self, _blank, _parent or _top
+
+- openweathermap:
+    label: Szeged, HU
+    units: metric
+    provider: openweathermap
+    cache: 10
+
+- datetime:
+  locale: en-US
+  format:
+    dateStyle: long
+    timeStyle: short
+    hour12: false

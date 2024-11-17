@@ -1,0 +1,26 @@
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    user: root
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 60s
+      labels:
+        - "prometheus-job=cadvisor"
+        - "prometheus-port=8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - network_private
+
+networks:
+  network_private:
+    external: true

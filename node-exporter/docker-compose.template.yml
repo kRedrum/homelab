@@ -1,0 +1,29 @@
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    user: root
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 2
+        window: 60s
+      labels:
+        - prometheus-job=node-exporter
+        - prometheus-port=9100
+    volumes:
+      - /:/rootfs:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - network_private
+
+networks:
+  network_private:
+    external: true

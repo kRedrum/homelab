@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  homepage:
+    image: "ghcr.io/gethomepage/homepage:latest"
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=network_private"
+        - "traefik.http.routers.homepage.rule=Host(`${HOMEPAGE_DOMAIN}`)"
+        - "traefik.http.routers.homepage.entrypoints=websecure"
+        - "traefik.http.routers.homepage.middlewares=internal-only@file"
+        - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+        - "traefik.http.routers.homepage.tls.certresolver=letsencrypt"
+    ports:
+      - ${HOMEPAGE_PORT}:3000
+    networks:
+      - network_private
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=*
+    volumes:
+      - ${NAS_PATH}/configs/homepage:/app/config
+      - ${NAS_PATH}/configs/homepage/icons:/app/public/icons
+      - ${NAS_PATH}/configs/homepage/images:/app/public/images
+      - ${NAS_PATH}/logs:/app/config/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  network_private:
+    external: true

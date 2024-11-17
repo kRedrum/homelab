@@ -1,0 +1,33 @@
+---
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    deploy:
+      mode: replicated
+      replicas: 1 
+      placement:
+        constraints:
+          - node.role == worker
+      restart_policy: 
+        condition: on-failure
+        delay: 10s
+        max_attempts: 2
+        window: 30s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=network_public"
+        - "traefik.http.routers.jellyseerr.entryPoints=websecure"
+        - "traefik.http.routers.jellyseerr.rule=Host(`${JELLYSEERR_DOMAIN}`)"
+        - "traefik.http.routers.jellyseerr.middlewares=internal-only@file"
+        - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+    environment:
+      - TZ=Europe/Budapest
+    volumes:
+      - ${NAS_PATH}/configs/jellyseerr:/app/config
+    networks:
+      - network_public
+
+networks:
+  network_public:
+    external: true
