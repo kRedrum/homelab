@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  name: traefik
+  namespace: infra
+spec:
+  rules:
+  - host: ${TRAEFIK_DOMAIN}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: traefik
+            port:
+              number: 443
+  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+  - hosts:
+    - ${TRAEFIK_DOMAIN}
+    secretName: traefik-cert

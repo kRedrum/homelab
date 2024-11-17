@@ -1,0 +1,384 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gethomepage-config
+  namespace: apps
+data:
+  custom.css: |
+    /* Hide elements with _hidden prefix */
+    [data-name^="_hidden"] .service-title,
+    .bookmark-group .bookmark-group-name {
+      display: none;
+    }
+
+    /* Hide footer completely */
+    #footer {
+      display: none;
+    }
+  settings.yaml: |
+    background: 
+      image: "https://wallpapercave.com/wp/wp11361922.png" 
+      blur: md
+      brigthness: 75
+      opacity: 85
+    hideErrors: false
+    headerStyle: boxedWidgets
+    useEqualHeights: true
+
+    layout:
+      # HOME Tab Items
+      Media:
+          style: column
+          tab: HOME
+          icon: mdi-multimedia
+      Networking:
+          style: column
+          tab: HOME
+          icon: mdi-wan
+      Monitoring:
+          style: column
+          tab: HOME
+          icon: mdi-eye
+      Management:
+          style: column
+          tab: HOME
+          icon: mdi-tools
+      Utilities:
+          style: column
+          tab: HOME
+          icon: mdi-cog
+      Development:
+          style: row
+          tab: HOME
+      Socials:
+          style: row
+          tab: HOME
+      # STAT Tab Items
+      Users Stats:
+          style: column
+          tab: STAT
+          icon: mdi-account-group
+      Session Stats:
+          style: column
+          tab: STAT
+          icon: mdi-account-group
+      Library Stats:
+          style: column
+          tab: STAT
+          icon: mdi-multimedia
+      Release Calendar:
+          style: column
+          tab: STAT
+          icon: mdi-calendar
+  services.yaml: |
+    - Media:
+      - Audiobookshelf:
+          icon: sh-audiobookshelf.svg
+          href: "https://${AUDIOBOOKSHELF_DOMAIN}"
+          description: "Audiobook server"
+          namespace: media
+          app: audiobookshelf
+          widget:
+            type: audiobookshelf
+            key: "${AUDIOBOOKSHELF_API_KEY}"
+            url: "https://${AUDIOBOOKSHELF_DOMAIN}"
+            fields: ["books", "booksDuration"]
+      - Jellyfin:
+          icon: sh-jellyfin.svg
+          href: "https://${JELLYFIN_DOMAIN}"
+          description: "Media server"
+          namespace: media
+          app: jellyfin
+          widget:
+            type: jellyfin
+            key: "${JELLYFIN_API_KEY}"
+            url: "https://${JELLYFIN_DOMAIN}"
+            enableBlocks: true
+            enableNowPlaying: false
+            enableUser: false
+            fields: ["movies","series","episodes"]
+      - Jellyseerr:
+          icon: sh-jellyseerr.svg
+          href: "https://${JELLYSEERR_DOMAIN}"
+          namespace: media
+          app: jellyseerr-chart
+          description: "Jellyfin/Emby request manager"
+          widget:
+            type: "jellyseerr"
+            url: "https://${JELLYSEERR_DOMAIN}"
+            key: ${JELLYSEERR_API_KEY}
+
+    - Networking:
+      - Namecheap:
+          icon: sh-namecheap.svg
+          href: "https://www.namecheap.com/"
+          description: "Domain management"
+      - Traefik:
+          icon: sh-traefik.svg
+          href: "https://${TRAEFIK_DOMAIN}"
+          namespace: infra
+          app: traefik
+          description: "Reverse proxy"
+      - Adguard:
+          icon: sh-adguard-home.svg
+          href: "http://dns.lan"
+          description: "Home DNS Server"
+          proxmoxType: lxc
+          proxmoxNode: ${PROXMOX_NODE_NAME}
+          proxmoxVMID: 105
+          widget:
+            type: adguard
+            url: http://dns.lan
+            username: ${DNS_USERNAME}
+            password: ${DNS_PASSWORD}
+    
+    - Monitoring:
+      - Alloy:
+          icon: sh-grafana-alloy.svg
+          href: "https://${ALLOY_DOMAIN}"
+          description: "Grafana telemetry collector"
+      - Grafana:
+          icon: sh-grafana.svg
+          href: "https://${GRAFANA_DOMAIN}"
+          description: "Monitoring & analytics"
+      - Uptime:
+          icon: sh-uptime-kuma.svg
+          href: https://${UPTIME_KUMA_DOMAIN}
+          description: "track the availability and performance of your websites"
+          namespace: monitoring
+          app: uptime-kuma
+          widget:
+            type: uptimekuma
+            url: https://${UPTIME_KUMA_DOMAIN}
+            slug: healthy
+
+    - Management:
+      - Nextcloud:
+          icon: sh-nextcloud.svg
+          href: "https://${NEXTCLOUD_DOMAIN}"
+          namespace: apps
+          app: nextcloud
+          description: "File storage & collaboration"
+      - Portainer:
+          icon: sh-portainer.svg
+          href: "https://${PORTAINER_DOMAIN}"
+          description: "Kubernetes management"
+      - Proxmox:
+          icon: sh-proxmox.svg
+          href: "https://pve.lan:8006"
+          description: "Virtualization platform"
+          widget:
+            type: proxmox 
+            url: https://pve.lan:8006 
+            username: ${PROXMOX_TOKEN}  
+            password: ${PROXMOX_SECRET}
+            
+    - Utilities:
+      - Actual:
+          icon: sh-actual-budget.svg
+          href: "https://${ACTUAL_DOMAIN}"
+          description: "Personal finance manager"
+      - qBittorrent:
+          icon: sh-vuetorrent.svg
+          href: "http://torrent.lan"
+          description: "Torrent client"
+          proxmoxNode: ${PROXMOX_NODE_NAME}
+          proxmoxVMID: 100
+          widget:
+            type: qbittorrent
+            url: "http://torrent.lan"
+            username: ${TORRENT_USERNAME}
+            password: ${TORRENT_PASSWORD}
+
+    - Users Stats:
+      - Media Last Online:
+          icon: sh-jellyfin.svg        
+          widget:
+            type: customapi
+            headers:
+              Authorization: "MediaBrowser Token=${JELLYFIN_API_KEY}"
+            url: "httpS://${JELLYFIN_DOMAIN}/users"
+            refreshInterval: 30000
+            display: dynamic-list
+            mappings:
+              label: LastActivityDate
+              name: Name
+              format: relativeDate
+      - Books Last Online:
+          icon: sh-audiobookshelf.svg        
+          widget:
+            type: customapi
+            headers:
+              Authorization: "Bearer ${AUDIOBOOKSHELF_API_KEY}"
+            url: "https://${AUDIOBOOKSHELF_DOMAIN}/api/users"
+            refreshInterval: 30000
+            display: dynamic-list
+            mappings:
+              items: users
+              label: lastSeen
+              name: username
+              format: relativeDate
+      - Request By User:
+          icon: sh-jellyseerr.svg        
+          widget:
+            type: customapi
+            headers:
+              X-Api-Key: "${JELLYSEERR_API_KEY}"
+            url: "https://${JELLYSEERR_DOMAIN}/api/v1/user"
+            refreshInterval: 30000
+            display: dynamic-list
+            mappings:
+              items: results
+              label: requestCount
+              name: jellyfinUsername
+              format: number
+    - Session Stats:
+      - My Book Listening Stats:
+          icon: sh-audiobookshelf.svg
+          href: "https://${AUDIOBOOKSHELF_DOMAIN}/me/listening-stats"        
+          widget:
+            type: customapi
+            headers:
+              Authorization: "Bearer ${AUDIOBOOKSHELF_API_KEY}"
+            url: "https://${AUDIOBOOKSHELF_DOMAIN}/api/me/listening-stats"
+            refreshInterval: 30000
+            mappings: 
+              - field: totalTime
+                label: Total Minutes Listened
+                format: duration
+              - field: today
+                label: Today Listen Minutes
+                format: duration
+              - field: recentSessions.0.displayTitle
+                label: Recent Listen
+                format: text
+      - Books Active Sessions:
+          icon: sh-audiobookshelf.svg        
+          widget:
+            type: customapi
+            headers:
+              Authorization: "Bearer ${AUDIOBOOKSHELF_API_KEY}"
+            url: "https://${AUDIOBOOKSHELF_DOMAIN}/api/users/online"
+            refreshInterval: 30000
+            display: dynamic-list
+            mappings:
+              items: openSessions
+              label: deviceInfo.clientName
+              name: mediaMetadata.title
+              format: text
+      - Media Active Sessions:
+          icon: sh-jellyfin.svg        
+          widget:
+            type: customapi
+            headers:
+              Authorization: "MediaBrowser Token=${JELLYFIN_API_KEY}"
+            url: "https://${JELLYFIN_DOMAIN}/Sessions?activeWithinSeconds=5"
+            refreshInterval: 15000
+            display: dynamic-list
+            mappings:
+              label: UserName
+              name: NowPlayingItem.Name
+
+    # - Library Stats:
+    #   - Media Libraries:
+    #       icon: sh-jellyfin.svg
+    #       widget:
+    #         type: customapi
+    #         headers:
+    #           Authorization: "MediaBrowser Token=${JELLYFIN_API_KEY}"
+    #         url: "https://${JELLYFIN_DOMAIN}/System/Info/Storage"
+    #         refreshInterval: 30000
+    #         display: dynamic-list
+    #         mappings:
+    #           items: Libraries
+    #           label: "Folders.0.Path"
+    #           name: "Name"
+    #           format: bytes
+    #   - Books Libraries Updated:
+    #       icon: sh-audiobookshelf.svg
+    #       widget:
+    #         type: customapi
+    #         headers:
+    #           Authorization: "Bearer ${AUDIOBOOKSHELF_API_KEY}"
+    #         url: "https://${AUDIOBOOKSHELF_DOMAIN}/api/libraries"
+    #         refreshInterval: 30000
+    #         display: dynamic-list
+    #         mappings:
+    #           items: libraries
+    #           label: "lastUpdate"
+    #           name: "name"
+    #           format: relativeDate
+  widgets.yaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "cluster"
+        nodes:
+          show: false
+          cpu: true
+          memory: true
+          showLabel: true
+
+    - glances:
+        url: "http://${NFS_IP}:61208"
+        cpu: false
+        mem: false 
+        cputemp: false
+        disk: /vault
+        diskUnits: bytes
+        expanded: true
+        label: NAS
+
+    - openmeteo:
+        label: Szeged, HU
+        units: metric
+        timezone: Europe/Budapest
+        latitude: 46.253
+        longitude: 20.1482
+        cache: 10
+
+    - datetime:
+        locale: hu-HU
+        format:
+          dateStyle: long
+          timeStyle: short
+          hour12: false
+  bookmarks.yaml: |
+    - _hidden:
+      - Github:
+        - abbr: GH
+          icon: sh-github.svg
+          href: https://github.com/
+      - ChatGPT:
+        - abbr: GPT
+          icon: sh-chatgpt.svg
+          href: https://github.com/
+
+    - _hidden:
+      - Ncore:
+        - abbr: NC
+          href: https://ncore.pro/
+      - Reddit:
+        - icon: sh-reddit.svg
+          href: https://reddit.com/
+      - YouTube:
+        - abbr: YT
+          icon: sh-youtube.svg
+          href: https://youtube.com/
+      - Steam:
+        - abbr: STM
+          icon: sh-steam.svg
+          href: https://store.steampowered.com/
+
+  kubernetes.yaml: |
+    mode: default
+    ingress: true
+
+  proxmox.yaml: |
+    ${PROXMOX_NODE_NAME}: # Hostname
+        url: "https://pve.lan:8006"
+        token: "${PROXMOX_TOKEN}"
+        secret: "${PROXMOX_SECRET}"

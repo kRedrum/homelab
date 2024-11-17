@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jellyfin-backup-pv
+  namespace: media
+spec:
+  capacity:
+    storage: 3Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    - hard
+    - proto=tcp
+    - nfsvers=4.2
+  nfs:
+    path: ${NFS_PATH}/backups/jellyfin
+    server: ${NFS_IP}

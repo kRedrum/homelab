@@ -1,0 +1,71 @@
+image:
+  tag: "2.32.1"
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsGroup: 1000
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-cs-bouncer@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: ${AUDIOBOOKSHELF_DOMAIN}
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: audiobookshelf-tls
+      hosts:
+        - ${AUDIOBOOKSHELF_DOMAIN}
+
+affinity: 
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: homelab.lan/nfs-node
+              operator: In
+              values:
+                - "true"
+
+audiobookshelf:
+  # TODO: nfs pv and pvc for backup
+  backup:
+    path: "/backups"
+    persistence:
+      enabled: true
+      existingClaim: audiobookshelf-backup-pvc
+  library:
+    path: "/library"
+    persistence:
+      enabled: true
+      existingClaim: audiobookshelf-library-pvc
+  config:
+    persistence:
+      resources:
+        requests:
+          storage: 2Gi
+  metadata:
+    persistence:
+      resources:
+        requests:
+          storage: 3Gi
+  nodeEnv: production
+  podcast:
+    downloadTimeout: "30"

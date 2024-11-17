@@ -1,0 +1,10 @@
+image:
+  tag: "v4.0.2"
+
+storageClass:
+  name: nfs-vault
+  pathPattern: ${NFS_SUBDIR_PATH_PATTERN}
+
+nfs:
+  server: ${NFS_IP}
+  path: ${NFS_PATH}/k3s

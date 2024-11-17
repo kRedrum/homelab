@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crowdsec-config
+  namespace: infra
+data:
+  config.yaml.local: |
+    # TODO: enable when migrate to db
+    # db_config:
+    #   type: postgresql
+    #   user: 
+    #   password: ${DB_USER_PASSWD}
+    #   db_name: k3s-infra
+    #   host: infra-postgresql.infra.svc.cluster.local
+    #   port: 5432
+    api:
+      server:
+        auto_registration:
+          enabled: true
+          token: "${REGISTRATION_TOKEN}" # /!\ Do not modify this variable (auto-generated and handled by the chart)
+          allowed_ranges:
+            - "127.0.0.1/32"
+            - "192.168.50.0/16"
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"

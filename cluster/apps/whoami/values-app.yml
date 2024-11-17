@@ -1,0 +1,16 @@
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd,infra-secure-middleware@kubernetescrd,infra-rate-limit@kubernetescrd,infra-cs-bouncer@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  pathType: Prefix
+  hosts:
+    - host: ${WHOAMI_DOMAIN}
+      paths:
+        - "/"
+  tls:
+    - secretName: whoami-cert
+      hosts:
+          - ${WHOAMI_DOMAIN}

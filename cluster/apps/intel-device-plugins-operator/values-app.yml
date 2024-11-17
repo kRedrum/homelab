@@ -1,0 +1,7 @@
+manager:
+  devices:
+    dsa: false
+    gpu: true
+    iaa: false
+    qat: false
+    sgx: false

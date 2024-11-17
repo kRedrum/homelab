@@ -1,0 +1,10 @@
+namespaceOverride: "kube-system"
+
+image:
+  tag: "v1.0.1"
+
+config:
+  address: "${VIP_IP}"
+
+env:
+  svc_election: true

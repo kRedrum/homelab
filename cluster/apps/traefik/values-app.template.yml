@@ -1,0 +1,41 @@
+namespaceOverride: "infra"
+
+image:
+  tag: "v3.6.2"
+
+service:
+  type: LoadBalancer
+  annotations: 
+    kube-vip.io/loadbalancerIPs: ${TRAEFIK_FIXED_IP}
+  spec:
+    externalTrafficPolicy: Local
+
+deployment:
+  kind: DaemonSet
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9100"
+
+ingressClass:
+  name: traefik
+
+experimental:
+  abortOnPluginErrors: true
+  plugins:
+    cs-bouncer:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.4.4
+
+logs:
+  general:
+    format: common
+  access:
+    enabled: true
+    format: json
+    timezone: Europe/Budapest
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: true
+    ingressClass: traefik

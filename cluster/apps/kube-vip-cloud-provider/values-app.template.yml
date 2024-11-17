@@ -1,0 +1,8 @@
+namespaceOverride: "kube-system"
+
+image:
+  tag: "v0.0.12"
+
+cm:
+  data:
+    range-global: "${LOADBALANCER_IP_RANGE}"

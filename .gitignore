@@ -1,0 +1,12 @@
+/env/.env
+
+# Webserver
+/.htaccess
+
+# Scriptfiles
+*.log
+
+# Ignore all .env files
+**/.env
+
+/TODO.local.md

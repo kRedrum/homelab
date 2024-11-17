@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  tag: "25.12.0"
+
+login:
+  method: "password"
+  allowedLoginMethods:
+    - password
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: ${ACTUAL_DOMAIN}
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: actualbudget-tls
+      hosts:
+        - ${ACTUAL_DOMAIN}
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: homelab.lan/nfs-node
+              operator: In
+              values:
+                - "true"

@@ -1,0 +1,29 @@
+image:
+  tag: "2.0.2"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-cs-bouncer@kubernetescrd,infra-internal-only@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: "${UPTIME_KUMA_DOMAIN}"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+  - hosts:
+      - "${UPTIME_KUMA_DOMAIN}"
+    secretName: uptime-cert
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: homelab.lan/nfs-node
+              operator: In
+              values:
+                - "true"

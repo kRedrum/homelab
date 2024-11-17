@@ -1,0 +1,51 @@
+
+image:
+  tag:  "32.0.3"
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd,infra-cs-bouncer@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: ${NEXTCLOUD_DOMAIN}
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: nextcloud-tls
+      hosts:
+        - ${NEXTCLOUD_DOMAIN}
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: homelab.lan/nfs-node
+              operator: In
+              values:
+                - "true"
+
+nextcloud:
+  host: ${NEXTCLOUD_DOMAIN}
+  existingSecret:
+    enabled: true
+    usernameKey: username
+    passwordKey: password
+    secretName: nc-basic-auth
+
+  extraVolumes:
+    - name: nfs-vault
+      hostPath:
+        path: ${NFS_PATH}
+        type: Directory
+
+  extraVolumeMounts:
+  - name: nfs-vault
+    mountPath: "/vault"
+
+persistence:
+  enabled: true

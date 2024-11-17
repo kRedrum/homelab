@@ -1,0 +1,77 @@
+container_runtime: containerd
+
+config:
+  config.yaml.local: null
+
+podAnnotations: 
+  prometheus.io/scrape: 'true'
+  prometheus.io/port: '6060'
+
+# tls:
+#   enabled: true
+#   certManager:
+#     enabled: true
+#     issuer:
+#       name: letsencrypt-prod
+#       kind: ClusterIssuer
+
+agent:
+  lapiURL: http://crowdsec-service.infra.svc.cluster.local:8080
+  lapiHost: crowdsec-service.infra.svc.cluster.local
+  lapiPort: 8080
+  acquisition:
+    - namespace: infra
+      podName: traefik-*
+      program: traefik
+    - namespace: media
+      podName: jellyfin-*
+      program: jellyfin
+    - namespace: media
+      podName: jellyseerr-*
+      program: jellyseerr
+    - namespace: media
+      podName: audiobookshelf-*
+      program: audiobookshelf
+  env:
+    - name: PARSERS
+      value: "crowdsecurity/cri-logs"
+    - name: COLLECTIONS
+      value: "crowdsecurity/traefik LePresidente/jellyfin LePresidente/jellyseerr plague-doctor/audiobookshelf"
+
+lapi:
+  secrets:
+    registrationToken: "${CROWDSEC_REGISTRATION_TOKEN}"
+    csLapiSecret: "${CROWDSEC_LAPI_SECRET}"
+  replicas: 1
+  storeCAPICredentialsInSecret: true
+  metrics:
+    enabled: true
+  env:
+    - name: BOUNCER_KEY_TRAEFIK
+      value: ${CROWDSEC_BOUNCER_KEY}
+  extraVolumeMounts:
+    - name: config-volume
+      mountPath: /etc/crowdsec/config.yaml.local
+      subPath: config.yaml.local
+  extraVolumes:
+    - name: config-volume
+      configMap:
+        name: crowdsec-config
+  persistentVolume:
+    config:
+      enabled: false
+
+appsec:
+  enabled: true
+  lapiURL: http://crowdsec-service.infra.svc.cluster.local:8080
+  lapiHost: crowdsec-service.infra.svc.cluster.local
+  acquisitions:
+    - source: appsec
+      listen_addr: "0.0.0.0:7422"
+      path: /
+      appsec_config: crowdsecurity/appsec-default
+      labels:
+        type: appsec
+  env:
+    - name: COLLECTIONS
+      value: "crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules crowdsecurity/appsec-crs"
