@@ -4,27 +4,6 @@ This repository contains the configuration and setup for my self-hosted homelab.
 
 ---
 
-## Services Overview
-
-### Applications
-
-| Application        | Status |
-|--------------------|--------|
-| **code-server**    |        |
-| **atsumenu**       |        |
-| **jellyfin**       |    x   |
-| **actual**         |        |
-| **adguard**        |    x   |
-| **audiobookshelf** |        |
-| **grafana/loki**   |        |
-| **portainer**      |    x   |
-| **traefik**        |    x   |
-| **gethomepage**    |    x   |
-| **fail2ban**       |        |
-| **jellyseerr**     |        |
-| **rustdesk**       |        |
----
-
 ## Backup
 - rclone with encryption to wasabi s3
 
@@ -43,10 +22,10 @@ This repository contains the configuration and setup for my self-hosted homelab.
 - **.gitignore**: Specifies files and directories to ignore (e.g., `.env`, logs, generated yamls).
 
 ### Application Folders
-Each application (e.g., `jellyfin`, `authentik`) has its own folder containing:
-- **.env**: Environment variables specific to the application.
+Each application (e.g., `jellyfin`, `traefik`) has its own folder containing:
+- **.env?**: Environment variables specific to the application.
 - **docker-compose.template.{yml,yaml}**: A Docker Compose template for the application.
-- **configs/**: Configurational folders mounted to the containers.
+- **configs/**: Configurational folders mounted to the containers from NFS.
 ---
 
 ## Scripts
