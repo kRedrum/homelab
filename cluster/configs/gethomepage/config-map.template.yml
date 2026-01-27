@@ -139,7 +139,7 @@ data:
           description: "Grafana telemetry collector"
       - Grafana:
           icon: sh-grafana.svg
-          href: "https://${GRAFANA_DOMAIN}"
+          href: "https://${GRAFANA_DOMAIN}/bookmarks"
           description: "Monitoring & analytics"
       - Uptime:
           icon: sh-uptime-kuma.svg

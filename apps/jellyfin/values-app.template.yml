@@ -65,8 +65,15 @@ ingress:
         - "${JELLYFIN_DOMAIN}"
       secretName: jellyfin-cert
 
+volumes:
+  - name: backup
+    persistentVolumeClaim:
+      claimName: jellyfin-backup-pvc
+
 # mounts for container
 volumeMounts:
+  - name: backup
+    mountPath: /config/data/backups
   - name: media
     mountPath: /media/movies
     subPath: movies
@@ -77,5 +84,5 @@ volumeMounts:
     readOnly: true
   - name: media
     mountPath: /media/animes
-    subPath: anime
+    subPath: animes
     readOnly: true

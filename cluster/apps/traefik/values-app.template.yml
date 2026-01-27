@@ -13,8 +13,7 @@ service:
 deployment:
   kind: DaemonSet
   podAnnotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "9100"
+    k8s.grafana.io/scrape: "true"
 
 ingressClass:
   name: traefik
