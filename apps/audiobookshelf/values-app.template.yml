@@ -2,7 +2,7 @@ image:
   tag: "2.32.1"
 
 podSecurityContext:
-  fsGroup: 1000
+  fsGroup: 1001
 
 securityContext:
   allowPrivilegeEscalation: false
@@ -12,8 +12,8 @@ securityContext:
   privileged: false
   readOnlyRootFilesystem: true
   runAsNonRoot: true
-  runAsGroup: 1000
-  runAsUser: 1000
+  runAsGroup: 1001
+  runAsUser: 1001
   seccompProfile:
     type: RuntimeDefault
 
