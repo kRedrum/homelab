@@ -45,7 +45,7 @@ nextcloud:
 
   extraVolumeMounts:
   - name: nfs-vault
-    mountPath: "/vault"
+    mountPath: "${NFS_PATH}"
 
 persistence:
   enabled: true

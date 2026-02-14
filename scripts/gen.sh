@@ -28,7 +28,7 @@ done
 
 substitue() {
   local dir="$1"
-  local template_files=($2)
+  local template_files=($@)
   local env_file="${FOLDER}/${ENV_FILE}"
 
   # xargs for convert output to args for export
@@ -52,7 +52,7 @@ walk() {
   local template_files=($(find "$dir" -maxdepth 1 -type f -name "*.template.yml"))
 
   if (( ${#template_files[@]} > 0 )); then
-    substitue "$dir" ${template_files}
+    substitue "$dir" "${template_files[@]}"
   fi
 
   for subdir in "$dir"/*; do

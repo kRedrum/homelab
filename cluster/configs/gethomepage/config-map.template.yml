@@ -183,6 +183,7 @@ data:
           href: "http://torrent.lan"
           description: "Torrent client"
           proxmoxNode: ${PROXMOX_NODE_NAME}
+          proxmoxType: lxc
           proxmoxVMID: 100
           widget:
             type: qbittorrent
@@ -327,7 +328,7 @@ data:
         cpu: false
         mem: false 
         cputemp: false
-        disk: /vault
+        disk: ${NFS_PATH}
         diskUnits: bytes
         expanded: true
         label: NAS

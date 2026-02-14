@@ -13,7 +13,7 @@ persistence:
     enabled: true
     type: hostPath
     accessMode: ReadOnlyMany
-    hostPath: '/vault/media'
+    hostPath: '${NFS_PATH}/media'
 
 podSecurityContext:
   fsGroup: 1000
