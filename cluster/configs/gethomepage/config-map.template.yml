@@ -185,11 +185,6 @@ data:
           proxmoxNode: ${PROXMOX_NODE_NAME}
           proxmoxType: lxc
           proxmoxVMID: 100
-          widget:
-            type: qbittorrent
-            url: "http://torrent.lan"
-            username: ${TORRENT_USERNAME}
-            password: ${TORRENT_PASSWORD}
 
     - Users Stats:
       - Media Last Online:

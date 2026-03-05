@@ -47,7 +47,7 @@ affinity:
 audiobookshelf:
   # TODO: nfs pv and pvc for backup
   backup:
-    path: "/backups"
+    path: "/metadata/backups"
     persistence:
       enabled: true
       existingClaim: audiobookshelf-backup-pvc

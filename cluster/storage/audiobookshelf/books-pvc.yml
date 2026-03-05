@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: audiobookshelf-library-pvc
+  namespace: media
+spec:
+  storageClassName: ""
+  volumeName: audiobookshelf-library-pv
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 3Gi

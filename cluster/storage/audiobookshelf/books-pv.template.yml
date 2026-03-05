@@ -16,5 +16,5 @@ spec:
     - proto=tcp
     - nfsvers=4.2
   nfs:
-    path: ${NFS_PATH}/z
+    path: ${NFS_PATH}/books
     server: ${NFS_IP}
