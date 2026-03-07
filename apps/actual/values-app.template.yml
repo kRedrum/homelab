@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  tag: "25.12.0"
+  tag: "26.2.0"
 
 login:
   method: "password"
@@ -25,12 +25,5 @@ ingress:
       hosts:
         - ${ACTUAL_DOMAIN}
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-            - key: homelab.lan/nfs-node
-              operator: In
-              values:
-                - "true"
+persistence:
+  enabled: true
