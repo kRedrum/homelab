@@ -7,7 +7,7 @@ ingress:
   className: "traefik"
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
-    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd,infra-cs-bouncer@kubernetescrd"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
     - host: ${NEXTCLOUD_DOMAIN}
@@ -44,8 +44,17 @@ nextcloud:
         type: Directory
 
   extraVolumeMounts:
-  - name: nfs-vault
-    mountPath: "${NFS_PATH}"
+    - name: nfs-vault
+      mountPath: "${NFS_PATH}"
+
+  configs:
+    proxy.config.php: |-
+      <?php
+      $CONFIG = array (
+        'overwrite.cli.url' => 'https://${NEXTCLOUD_DOMAIN}',
+        'overwritehost' => '${NEXTCLOUD_DOMAIN}',
+        'overwriteprotocol' => 'https',
+      );
 
 persistence:
   enabled: true
