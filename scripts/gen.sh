@@ -42,7 +42,7 @@ substitue() {
     
     # TODO: find better templating that preserves ${} at no match
     echo -e "${BLUE}[Log]: 🔄 Substituting $(basename $template_file) in $dir"
-    envsubst < "$template_file" > "$output_file"
+    envsubst "$(grep -v '^#' $env_file | awk -F= '{printf "${%s} ", $1}')" < "$template_file" > "$output_file"
   done
 }
 
