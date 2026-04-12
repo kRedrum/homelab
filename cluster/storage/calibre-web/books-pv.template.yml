@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: audiobookshelf-library-pv
+  name: books-pv
   namespace: media
 spec:
   capacity:
@@ -16,5 +16,5 @@ spec:
     - proto=tcp
     - nfsvers=4.2
   nfs:
-    path: ${NFS_PATH}/books
+    path: ${NFS_PATH}/books/ebooks
     server: ${NFS_IP}

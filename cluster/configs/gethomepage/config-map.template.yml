@@ -107,6 +107,17 @@ data:
             type: "jellyseerr"
             url: "https://${JELLYSEERR_DOMAIN}"
             key: ${JELLYSEERR_API_KEY}
+      - Calibre-Web:
+          icon: sh-calibre-web.svg
+          href: "https://${CALIBRE_DOMAIN}"
+          description: "Ebook management"
+          namespace: media
+          app: calibre-web
+          widget:
+            type: calibreweb
+            url: "https://${CALIBRE_DOMAIN}"
+            username: ${CALIBRE_USERNAME}
+            password: ${CALIBRE_PASSWORD}
 
     - Networking:
       - Namecheap:

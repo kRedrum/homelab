@@ -68,4 +68,4 @@ audiobookshelf:
           storage: 3Gi
   nodeEnv: production
   podcast:
-    downloadTimeout: "30"
+    downloadTimeout: "120"
