@@ -1,26 +1,10 @@
 image:
   tag: "0.6.26"
 
-# podSecurityContext:
-#   fsGroup: 1003
-
 env:
-  # PUID: "1003"
-  # PGID: "1003"
+  PUID: "1003"
+  PGID: "1003"
   DOCKER_MODS: "linuxserver/mods:universal-calibre"
-
-# securityContext:
-#   allowPrivilegeEscalation: false
-#   capabilities:
-#     drop:
-#     - ALL
-#   privileged: false
-#   readOnlyRootFilesystem: true
-#   runAsNonRoot: true
-#   runAsGroup: 1003
-#   runAsUser: 1003
-#   seccompProfile:
-#     type: RuntimeDefault
 
 ingress:
   main:
