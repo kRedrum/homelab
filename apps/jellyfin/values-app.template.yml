@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  tag: "10.11.4"
+  tag: "10.11.5"
 
 podLabels:
   app: jellyfin
@@ -27,8 +27,8 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   privileged: false
-  runAsUser: 1000
-  runAsGroup: 1000
+  runAsUser: 1002
+  runAsGroup: 1002
   seccompProfile:
     type: RuntimeDefault
 
