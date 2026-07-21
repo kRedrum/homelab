@@ -1,7 +1,7 @@
 namespaceOverride: "infra"
 
 image:
-  tag: "v3.6.2"
+  tag: "v3.7.8"
 
 service:
   type: LoadBalancer
@@ -25,13 +25,13 @@ experimental:
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       version: v1.4.4
 
-logs:
-  general:
-    format: common
-  access:
-    enabled: true
-    format: json
-    timezone: Europe/Budapest
+log:
+  format: common
+
+accessLog:
+  enabled: true
+  format: json
+  timezone: Europe/Budapest
 
 providers:
   kubernetesCRD:
