@@ -116,8 +116,8 @@ data:
           widget:
             type: calibreweb
             url: "https://${CALIBRE_DOMAIN}"
-            username: ${CALIBRE_USERNAME}
-            password: ${CALIBRE_PASSWORD}
+            username: "${CALIBRE_USERNAME}"
+            password: "${CALIBRE_PASSWORD}"
 
     - Networking:
       - Namecheap:
@@ -154,7 +154,7 @@ data:
           description: "Monitoring & analytics"
       - MySpeed:
           icon: sh-myspeed.png
-          href: "https://${MYSPEED_DOMAIN}"
+          href: "http://speed.lan"
           description: "Internet speed test"
           proxmoxType: lxc
           proxmoxNode: ${PROXMOX_NODE_NAME}
