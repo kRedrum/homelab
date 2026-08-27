@@ -11,7 +11,7 @@ ingress:
     enabled: true
     className: "traefik"
     annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      traefik.ingress.kubernetes.io/router.entrypoints: "websecure,web"
       traefik.ingress.kubernetes.io/router.middlewares: "infra-cs-bouncer@kubernetescrd,infra-internal-only@kubernetescrd"
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
     hosts:
