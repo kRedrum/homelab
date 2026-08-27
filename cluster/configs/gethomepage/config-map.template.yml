@@ -152,6 +152,16 @@ data:
           icon: sh-grafana.svg
           href: "https://${GRAFANA_DOMAIN}/bookmarks"
           description: "Monitoring & analytics"
+      - MySpeed:
+          icon: sh-myspeed.png
+          href: "https://${MYSPEED_DOMAIN}"
+          description: "Internet speed test"
+          proxmoxType: lxc
+          proxmoxNode: ${PROXMOX_NODE_NAME}
+          proxmoxVMID: 103
+          widget:
+            type: myspeed 
+            url: http://speed.lan
       - Uptime:
           icon: sh-uptime-kuma.svg
           href: https://${UPTIME_KUMA_DOMAIN}
@@ -170,10 +180,6 @@ data:
           namespace: apps
           app: nextcloud
           description: "File storage & collaboration"
-      - Portainer:
-          icon: sh-portainer.svg
-          href: "https://${PORTAINER_DOMAIN}"
-          description: "Kubernetes management"
       - Proxmox:
           icon: sh-proxmox.svg
           href: "https://pve.lan:8006"
@@ -204,7 +210,7 @@ data:
             type: customapi
             headers:
               Authorization: "MediaBrowser Token=${JELLYFIN_API_KEY}"
-            url: "httpS://${JELLYFIN_DOMAIN}/users"
+            url: "httpS://${JELLYFIN_DOMAIN}/users?isDisabled=false"
             refreshInterval: 30000
             display: dynamic-list
             mappings:
