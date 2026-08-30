@@ -1,0 +1,53 @@
+image:
+  tag: "v2.27.0"
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: ${NTFY_DOMAIN}
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: ntfy-tls
+      hosts:
+        - ${NTFY_DOMAIN}
+
+ntfy:
+  baseURL: "https://${NTFY_DOMAIN}"
+  # Access control
+  auth:
+    file: "/data/auth.db"
+    defaultAccess: "deny-all"
+  enableLogin: true
+  cache:
+    file: "/data/cache.db"
+
+  webPush:
+    keys:
+      public: ${NTFY_WEBPUSH_PUBLIC_KEY}
+      private: ${NTFY_WEBPUSH_PRIVATE_KEY}
+    emailAddress: ${ACME_EMAIL}
+  # Upstream
+  upstreamBaseURL: "https://ntfy.sh"
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
