@@ -54,6 +54,7 @@ nextcloud:
         'overwrite.cli.url' => 'https://${NEXTCLOUD_DOMAIN}',
         'overwritehost' => '${NEXTCLOUD_DOMAIN}',
         'overwriteprotocol' => 'https',
+        'loglevel' => 1,
       );
 
 persistence:
