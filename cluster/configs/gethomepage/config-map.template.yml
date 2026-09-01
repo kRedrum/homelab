@@ -48,7 +48,7 @@ data:
           tab: HOME
           icon: mdi-cog
       Development:
-          style: row
+          style: column 
           tab: HOME
       Socials:
           style: row
@@ -142,12 +142,22 @@ data:
             url: http://dns.lan
             username: ${DNS_USERNAME}
             password: ${DNS_PASSWORD}
+      - Crowdsec:
+          icon: sh-crowdsec.svg
+          description: "CrowdSec dashboard"
+          namespace: infra
+          app: crowdsec-lapi
     
     - Monitoring:
-      - Alloy:
-          icon: sh-grafana-alloy.svg
-          href: "https://${ALLOY_DOMAIN}"
-          description: "Grafana telemetry collector"
+      - Ntfy:
+          icon: sh-ntfy.svg
+          href: "https://ntfy.sh/${NTFY_TOPIC}"
+          description: "Notification server"
+          widget:
+            type: ntfy
+            url: "https://ntfy.sh"
+            topic: ${NTFY_TOPIC}
+            fields: ['lastReceived', 'tags']
       - Grafana:
           icon: sh-grafana.svg
           href: "https://${GRAFANA_DOMAIN}/bookmarks"
@@ -202,6 +212,18 @@ data:
           proxmoxNode: ${PROXMOX_NODE_NAME}
           proxmoxType: lxc
           proxmoxVMID: 100
+    
+    - Development:
+      - Coder:
+          icon: sh-visual-studio-code.svg 
+          href: "https://${CODER_SERVER_DOMAIN}"
+          description: "Web-based IDE"
+          namespace: apps
+          app: coder-server-code-server
+      - GitHub:
+          icon: sh-github.svg
+          href: "https://github.com/kRedrum"
+          description: "My GitHub profile"
 
     - Users Stats:
       - Media Last Online:
@@ -292,35 +314,6 @@ data:
               label: UserName
               name: NowPlayingItem.Name
 
-    # - Library Stats:
-    #   - Media Libraries:
-    #       icon: sh-jellyfin.svg
-    #       widget:
-    #         type: customapi
-    #         headers:
-    #           Authorization: "MediaBrowser Token=${JELLYFIN_API_KEY}"
-    #         url: "https://${JELLYFIN_DOMAIN}/System/Info/Storage"
-    #         refreshInterval: 30000
-    #         display: dynamic-list
-    #         mappings:
-    #           items: Libraries
-    #           label: "Folders.0.Path"
-    #           name: "Name"
-    #           format: bytes
-    #   - Books Libraries Updated:
-    #       icon: sh-audiobookshelf.svg
-    #       widget:
-    #         type: customapi
-    #         headers:
-    #           Authorization: "Bearer ${AUDIOBOOKSHELF_API_KEY}"
-    #         url: "https://${AUDIOBOOKSHELF_DOMAIN}/api/libraries"
-    #         refreshInterval: 30000
-    #         display: dynamic-list
-    #         mappings:
-    #           items: libraries
-    #           label: "lastUpdate"
-    #           name: "name"
-    #           format: relativeDate
   widgets.yaml: |
     - kubernetes:
         cluster:
@@ -361,22 +354,6 @@ data:
           hour12: false
   bookmarks.yaml: |
     - _hidden:
-      - Github:
-        - abbr: GH
-          icon: sh-github.svg
-          href: https://github.com/
-      - ChatGPT:
-        - abbr: GPT
-          icon: sh-chatgpt.svg
-          href: https://github.com/
-
-    - _hidden:
-      - Ncore:
-        - abbr: NC
-          href: https://ncore.pro/
-      - Reddit:
-        - icon: sh-reddit.svg
-          href: https://reddit.com/
       - YouTube:
         - abbr: YT
           icon: sh-youtube.svg
@@ -385,6 +362,15 @@ data:
         - abbr: STM
           icon: sh-steam.svg
           href: https://store.steampowered.com/
+
+    - _hidden:
+      - Ncore:
+        - abbr: NC
+          href: https://ncore.pro/
+      - Reddit:
+        - icon: sh-reddit.svg
+          href: https://reddit.com/
+
 
   kubernetes.yaml: |
     mode: default

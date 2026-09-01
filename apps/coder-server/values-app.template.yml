@@ -1,0 +1,18 @@
+image:
+  tag: "4.135.0"
+
+ingress:
+  enabled: true
+  ingressClassName: "traefik"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: ${CODER_SERVER_DOMAIN}
+      paths:
+        - /
+  tls:
+    - secretName: coder-server-tls
+      hosts:
+        - ${CODER_SERVER_DOMAIN}
