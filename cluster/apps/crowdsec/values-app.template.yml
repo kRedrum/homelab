@@ -32,11 +32,14 @@ agent:
     - namespace: media
       podName: audiobookshelf-*
       program: audiobookshelf
+    - namespace: media
+      podName: calibre-web-*
+      program: calibre-web
   env:
     - name: PARSERS
       value: "crowdsecurity/cri-logs"
     - name: COLLECTIONS
-      value: "crowdsecurity/traefik LePresidente/jellyfin LePresidente/jellyseerr plague-doctor/audiobookshelf"
+      value: "crowdsecurity/traefik LePresidente/jellyfin LePresidente/jellyseerr plague-doctor/audiobookshelf Jgigantino31/calibre-web"
 
 lapi:
   secrets:
@@ -44,8 +47,8 @@ lapi:
     csLapiSecret: "${CROWDSEC_LAPI_SECRET}"
   replicas: 1
   storeCAPICredentialsInSecret: true
-  metrics:
-    enabled: true
+  podLabels:
+    app.kubernetes.io/name: crowdsec-lapi
   env:
     - name: BOUNCER_KEY_TRAEFIK
       value: ${CROWDSEC_BOUNCER_KEY}
@@ -60,6 +63,18 @@ lapi:
   persistentVolume:
     config:
       enabled: false
+  ingress:
+    enabled: true
+    ingressClassName: "traefik"
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      traefik.ingress.kubernetes.io/router.middlewares: "infra-internal-only@kubernetescrd"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    host: ${CROWDSEC_DOMAIN}
+    tls: 
+      - secretName: crowdsec-tls
+        hosts:
+          - ${CROWDSEC_DOMAIN}
 
 appsec:
   enabled: true
