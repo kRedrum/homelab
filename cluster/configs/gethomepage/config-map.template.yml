@@ -130,6 +130,11 @@ data:
           namespace: infra
           app: traefik
           description: "Reverse proxy"
+      - Crowdsec:
+          icon: sh-crowdsec.svg
+          description: "CrowdSec dashboard"
+          namespace: infra
+          app: crowdsec-lapi
       - Adguard:
           icon: sh-adguard-home.svg
           href: "http://dns.lan"
@@ -142,13 +147,13 @@ data:
             url: http://dns.lan
             username: ${DNS_USERNAME}
             password: ${DNS_PASSWORD}
-      - Crowdsec:
-          icon: sh-crowdsec.svg
-          description: "CrowdSec dashboard"
-          namespace: infra
-          app: crowdsec-lapi
+
     
     - Monitoring:
+      - Grafana:
+          icon: sh-grafana.svg
+          href: "https://${GRAFANA_DOMAIN}/bookmarks"
+          description: "Monitoring & analytics"
       - Ntfy:
           icon: sh-ntfy.svg
           href: "https://ntfy.sh/${NTFY_TOPIC}"
@@ -158,10 +163,6 @@ data:
             url: "https://ntfy.sh"
             topic: ${NTFY_TOPIC}
             fields: ['lastReceived', 'tags']
-      - Grafana:
-          icon: sh-grafana.svg
-          href: "https://${GRAFANA_DOMAIN}/bookmarks"
-          description: "Monitoring & analytics"
       - MySpeed:
           icon: sh-myspeed.png
           href: "http://speed.lan"
@@ -205,6 +206,8 @@ data:
           icon: sh-actual-budget.svg
           href: "https://${ACTUAL_DOMAIN}"
           description: "Personal finance manager"
+          app: actualbudget
+          namespace: apps
       - qBittorrent:
           icon: sh-vuetorrent.svg
           href: "http://torrent.lan"
@@ -212,6 +215,9 @@ data:
           proxmoxNode: ${PROXMOX_NODE_NAME}
           proxmoxType: lxc
           proxmoxVMID: 100
+          widget:
+            type: qbittorrent
+            url: http://torrent.lan
     
     - Development:
       - Coder:
@@ -219,7 +225,7 @@ data:
           href: "https://${CODER_SERVER_DOMAIN}"
           description: "Web-based IDE"
           namespace: apps
-          app: coder-server-code-server
+          app: code-server
       - GitHub:
           icon: sh-github.svg
           href: "https://github.com/kRedrum"
