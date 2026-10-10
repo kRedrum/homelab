@@ -21,6 +21,16 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
+  name: proxy-headers
+  namespace: infra
+spec:
+  headers:
+    customResponseHeaders:
+      X-Scheme: "https"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
   name: secure-middleware
   namespace: infra
 spec:

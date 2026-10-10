@@ -12,7 +12,7 @@ ingress:
     className: "traefik"
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: "websecure,web"
-      traefik.ingress.kubernetes.io/router.middlewares: "infra-cs-bouncer@kubernetescrd,infra-internal-only@kubernetescrd"
+      traefik.ingress.kubernetes.io/router.middlewares: "infra-cs-bouncer@kubernetescrd,infra-proxy-headers@kubernetescrd"
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
     hosts:
       - host: ${CALIBRE_DOMAIN}
