@@ -22,8 +22,8 @@ usage() {
     echo "  -e <encryption_key>  Encryption key to encrypt data before uploading"
     echo "  -d <dest_dir>        Optional destination subdirectory under the remote"
     echo "  -n <ntfy_topic>      Optional ntfy topic for push notifications"
-    echo "  -D, --dry-run        Perform a trial run with no changes made"
-    echo "  -h, --help           Show this help message"
+    echo "  -D                   Perform a trial run with no changes made"
+    echo "  -h                   Show this help message"
 }
 
 die() {
@@ -40,13 +40,6 @@ while getopts "r:e:d:s:n:Dh-:" opt; do
   s) SRC_DIR="$OPTARG" ;;
   e) ENCRYPTION_KEY="$OPTARG" ;;
   D) DRY_RUN=true ;;
-  -)
-    case "$OPTARG" in
-      dry-run) DRY_RUN=true ;;
-      help) usage; exit 0 ;;
-      *) usage; exit 1 ;;
-    esac
-    ;;
   h) usage; exit 0 ;;
   *) usage; exit 1 ;;
   esac
@@ -124,7 +117,7 @@ rclone_flags=(
     --max-transfer "$MAX_TRANSFER"
 )
 
-if [ "$DRY_RUN" = "true" ] || [ "$DRY_RUN" = "1" ]; then
+if [ "$DRY_RUN" = "true" ]; then
     rclone_flags+=("--dry-run")
 fi
 
