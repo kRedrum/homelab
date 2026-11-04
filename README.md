@@ -13,6 +13,8 @@ This repository contains the configuration and setup for my homelab cluster. It 
 - **ddns.sh**: A script for updating dynamic DNS records.
 - **unstage_sensitives.sh**: for unstaging sensitives files.
 - **gen.sh**: A script for substituting environment variables in configuration files.
+- **do-backup.sh**: Encrypted offsite backup script using `rclone crypt`.
+- **report_zpool.sh**: Report to Ntfy topic if the zfs pool is errors out
 
 ## Root Directory
 
@@ -21,6 +23,12 @@ This repository contains the configuration and setup for my homelab cluster. It 
 - **apps**: Custom regular apps that are deployed in cluster
 - **cluster**: Cluster resources (crds, namespaces, storage, configs, secrets) and infrastructure apps
 
+## Backups (`scripts/do-backup.sh`)
+
+Syncs local directories to a remote using `rclone crypt`:
+- **Encrypted & Obfuscated**: File contents, file names, and directory structures are client-side encrypted before uploading.
+- **Ignore Marker**: Any directory containing a `.backup-ignore` file is skipped automatically.
+- **Dry Run**: Pass `-D` (or set `DRY_RUN=true`) to test without transferring files.
 
 ## Why I use the Intel Device Operator
 
