@@ -11,7 +11,7 @@ ingress:
     enabled: true
     className: "traefik"
     annotations:
-      traefik.ingress.kubernetes.io/router.entrypoints: "websecure,web"
+      traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
       traefik.ingress.kubernetes.io/router.middlewares: "infra-cs-bouncer@kubernetescrd,infra-proxy-headers@kubernetescrd"
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
     hosts:
@@ -37,6 +37,11 @@ affinity:
 persistence:
   books:
     enabled: true
-    existingClaim: "books-pvc"
+    type: hostPath
+    hostPath: "${NFS_PATH}/books/ebooks/calibre_web"
   config:
     enabled: true
+
+volumeMounts:
+  - name: books
+    mountPath: /mnt/books
