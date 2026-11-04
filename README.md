@@ -1,3 +1,5 @@
+# NOT MAINTANED
+
 # Homelab Documentation
 
 This repository contains the configuration and setup for my self-hosted homelab. It includes various applications, middleware, and scripts to manage and secure the services.
