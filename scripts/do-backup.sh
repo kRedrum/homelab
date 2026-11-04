@@ -9,11 +9,12 @@ SRC_DIR="${SRC_DIR:-${SRC_DIRS:-}}"
 DEST_DIR="${DEST_DIR:-}"
 NTFY_TOPIC="${NTFY_TOPIC:-}"
 MAX_TRANSFER="${MAX_TRANSFER:-750G}"
+DRY_RUN="${DRY_RUN:-false}"
 
 failed=0
 
 usage() {
-    echo "Usage: ${0##*/} -r <remote> -s <src_dirs> -e <encryption_key> [-d <dest_dir>] [-n <ntfy_topic>]"
+    echo "Usage: ${0##*/} -r <remote> -s <src_dirs> -e <encryption_key> [-d <dest_dir>] [-n <ntfy_topic>] [-D|--dry-run]"
     echo ""
     echo "Options:"
     echo "  -r <remote>          Google Drive / rclone remote (e.g. 'gdrive:' or 'gdrive:backups')"
@@ -21,7 +22,8 @@ usage() {
     echo "  -e <encryption_key>  Encryption key to encrypt data before uploading"
     echo "  -d <dest_dir>        Optional destination subdirectory under the remote"
     echo "  -n <ntfy_topic>      Optional ntfy topic for push notifications"
-    echo "  -h                   Show this help message"
+    echo "  -D, --dry-run        Perform a trial run with no changes made"
+    echo "  -h, --help           Show this help message"
 }
 
 die() {
@@ -30,13 +32,21 @@ die() {
 }
 
 # Parse command-line arguments
-while getopts "r:e:d:s:n:h" opt; do
+while getopts "r:e:d:s:n:Dh-:" opt; do
   case $opt in
   r) RCLONE_REMOTE="$OPTARG" ;;
   d) DEST_DIR="$OPTARG" ;;
   n) NTFY_TOPIC="$OPTARG" ;;
   s) SRC_DIR="$OPTARG" ;;
   e) ENCRYPTION_KEY="$OPTARG" ;;
+  D) DRY_RUN=true ;;
+  -)
+    case "$OPTARG" in
+      dry-run) DRY_RUN=true ;;
+      help) usage; exit 0 ;;
+      *) usage; exit 1 ;;
+    esac
+    ;;
   h) usage; exit 0 ;;
   *) usage; exit 1 ;;
   esac
@@ -91,6 +101,10 @@ else
     TARGET_REMOTE="${remote_base}${dir_name}"
 fi
 
+if [ "$DRY_RUN" = "true" ] || [ "$DRY_RUN" = "1" ]; then
+    echo "Notice: DRY-RUN mode enabled. No changes will be made."
+fi
+
 echo "Backing up: $SRC_DIR -> $TARGET_REMOTE (encrypted)"
 echo "---"
 
@@ -101,14 +115,20 @@ export RCLONE_CONFIG_BACKUP_CRYPT_PASSWORD2="$OBSCURED_KEY"
 export RCLONE_CONFIG_BACKUP_CRYPT_FILENAME_ENCRYPTION="standard"
 export RCLONE_CONFIG_BACKUP_CRYPT_DIRECTORY_NAME_ENCRYPTION="true"
 
-if rclone sync "$SRC_DIR" "backup_crypt:" \
-    --progress \
-    --delete-during \
-    --exclude-if-present "$MARKER" \
-    --exclude "$MARKER" \
-    --dry-run \
-    --drive-stop-on-upload-limit \
-    --max-transfer "$MAX_TRANSFER"; then
+rclone_flags=(
+    --progress
+    --delete-during
+    --exclude-if-present "$MARKER"
+    --exclude "$MARKER"
+    --drive-stop-on-upload-limit
+    --max-transfer "$MAX_TRANSFER"
+)
+
+if [ "$DRY_RUN" = "true" ] || [ "$DRY_RUN" = "1" ]; then
+    rclone_flags+=("--dry-run")
+fi
+
+if rclone sync "$SRC_DIR" "backup_crypt:" "${rclone_flags[@]}"; then
     echo "Backup of $SRC_DIR completed successfully."
     failed=0
 else
