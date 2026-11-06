@@ -4,8 +4,9 @@ This repository contains the configuration and setup for my homelab cluster. It 
 
 ---
 
-## Services Overview
+## Infrastructure
 
+See [infrastructure.md](infrastructure.md) for the architecture diagram and hardware/workload breakdown.
 
 ## Directory Structure
 
@@ -20,6 +21,7 @@ This repository contains the configuration and setup for my homelab cluster. It 
 
 - **.env**: Environment variables for the entire homelab setup.
 - **.env.template**: Environment declarations only  
+- **infrastructure.md**: Architecture diagram and hardware workload mapping.
 - **apps**: Custom regular apps that are deployed in cluster
 - **cluster**: Cluster resources (crds, namespaces, storage, configs, secrets) and infrastructure apps
 
