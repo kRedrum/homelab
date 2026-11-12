@@ -22,7 +22,7 @@ usage() {
     echo "  -e <encryption_key>  Encryption key to encrypt data before uploading"
     echo "  -d <dest_dir>        Optional destination subdirectory under the remote"
     echo "  -n <ntfy_topic>      Optional ntfy topic for push notifications"
-    echo "  -D                   Perform a trial run with no changes made"
+    echo "  -D, --dry-run        Perform a trial run with no changes made"
     echo "  -h                   Show this help message"
 }
 
@@ -33,15 +33,22 @@ die() {
 
 # Parse command-line arguments
 while getopts "r:e:d:s:n:Dh-:" opt; do
-  case $opt in
-  r) RCLONE_REMOTE="$OPTARG" ;;
-  d) DEST_DIR="$OPTARG" ;;
-  n) NTFY_TOPIC="$OPTARG" ;;
-  s) SRC_DIR="$OPTARG" ;;
-  e) ENCRYPTION_KEY="$OPTARG" ;;
-  D) DRY_RUN=true ;;
-  h) usage; exit 0 ;;
-  *) usage; exit 1 ;;
+  case "$opt" in
+    r) RCLONE_REMOTE="$OPTARG" ;;
+    d) DEST_DIR="$OPTARG" ;;
+    n) NTFY_TOPIC="$OPTARG" ;;
+    s) SRC_DIR="$OPTARG" ;;
+    e) ENCRYPTION_KEY="$OPTARG" ;;
+    D) DRY_RUN=true ;;
+    h) usage; exit 0 ;;
+    -)
+      case "$OPTARG" in
+        dry-run) DRY_RUN=true ;;
+        help) usage; exit 0 ;;
+        *) echo "Error: Unknown option --$OPTARG" >&2; usage; exit 1 ;;
+      esac
+      ;;
+    *) usage; exit 1 ;;
   esac
 done
 
